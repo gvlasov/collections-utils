@@ -28,14 +28,12 @@ public final class CollectorsTest {
 
     @Test
     public void toLinkedHashSet() {
+        final LinkedHashSet<Integer> expected = new LinkedHashSet<>();
+        expected.add(1);
+        expected.add(2);
+        expected.add(3);
         Assert.assertEquals(
-            new LinkedHashSet<Integer>() {
-                {
-                    add(1);
-                    add(2);
-                    add(3);
-                }
-            },
+            expected,
             Arrays.asList(1, 2, 3).stream()
                 .collect(Collectors.toLinkedHashSet())
         );
