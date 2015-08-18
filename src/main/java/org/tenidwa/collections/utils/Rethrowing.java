@@ -9,7 +9,7 @@ import java.util.function.Function;
  *  question and answer</a>
  * @author Georgy Vlasov (suseika@tendiwa.org)
  * @version $tendiwa-version$
- * @since 0.
+ * @since 0.2
  */
 public final class Rethrowing {
     public interface RethrowingFunction<T, R> {
