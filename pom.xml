@@ -6,7 +6,7 @@
 
     <groupId>org.tendiwa</groupId>
     <artifactId>collections-utils</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.3.0</version>
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
