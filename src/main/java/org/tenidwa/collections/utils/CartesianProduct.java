@@ -1,8 +1,7 @@
 package org.tenidwa.collections.utils;
 
-import com.google.common.collect.ForwardingList;
-import com.google.common.collect.ImmutableList;
-import java.util.List;
+import com.google.common.collect.ForwardingSet;
+import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -16,7 +15,7 @@ import java.util.function.BiFunction;
  * @version $Id$
  * @since 0.5.0
  */
-public final class CartesianProduct<A, B, R> extends ForwardingList<R> {
+public final class CartesianProduct<A, B, R> extends ForwardingSet<R> {
     /**
      * First multiplier.
      */
@@ -35,7 +34,7 @@ public final class CartesianProduct<A, B, R> extends ForwardingList<R> {
     /**
      * Saved result.
      */
-    private transient List<R> result;
+    private transient Set<R> result;
 
     /**
      * Ctor.
@@ -53,7 +52,7 @@ public final class CartesianProduct<A, B, R> extends ForwardingList<R> {
     }
 
     @Override
-    protected List<R> delegate() {
+    protected Set<R> delegate() {
         if (this.result == null) {
             this.result = this.multiplication();
         }
@@ -63,8 +62,8 @@ public final class CartesianProduct<A, B, R> extends ForwardingList<R> {
     /**
      * Creates Cartesian product of two lists.
      */
-    private List<R> multiplication() {
-        final ImmutableList.Builder<R> builder = ImmutableList.builder();
+    private Set<R> multiplication() {
+        final ImmutableSet.Builder<R> builder = ImmutableSet.builder();
         for (final A left : this.one) {
             for (final B right : this.two) {
                 builder.add(this.function.apply(left, right));
