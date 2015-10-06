@@ -18,9 +18,9 @@ public final class CartesianProductTest {
     @Test
     public void hasATimesBElements() {
         final ImmutableSet<Integer> left =
-            ImmutableSet.of(3, 4, 9);
+            ImmutableSet.of(1, 2, 3);
         final ImmutableSet<Integer> right =
-            ImmutableSet.of(1, 2, 9, 0, 3, 7, 11, 22);
+            ImmutableSet.of(1, 10, 100, 1000, 10000, 100000);
         MatcherAssert.assertThat(
             new CartesianProduct<>(
                 left,
@@ -29,6 +29,19 @@ public final class CartesianProductTest {
             ),
             Matchers.hasSize(left.size() * right.size())
         );
+    }
+
+    /**
+     * {@link CartesianProduct} can throw an exception if some of the results
+     * of mapping the pairs with the function are not unique.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void disallowsDuplicatedMappingResults() {
+        new CartesianProduct<>(
+            ImmutableSet.of(1, 2),
+            ImmutableSet.of(2, 1),
+            CartesianProductTest::sum
+        ).size();
     }
 
     /**

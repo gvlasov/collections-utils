@@ -2,6 +2,7 @@ package org.tenidwa.collections.utils;
 
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -63,12 +64,23 @@ public final class CartesianProduct<A, B, R> extends ForwardingSet<R> {
      * Creates Cartesian product of two lists.
      */
     private Set<R> multiplication() {
-        final ImmutableSet.Builder<R> builder = ImmutableSet.builder();
+        final Set<R> answer = new LinkedHashSet<>(
+            this.one.size() * this.two.size()
+        );
         for (final A left : this.one) {
             for (final B right : this.two) {
-                builder.add(this.function.apply(left, right));
+                final R element = this.function.apply(left, right);
+                if (answer.contains(element)) {
+                    throw new IllegalStateException(
+                        String.format(
+                            "Cartesian product result contains duplicated element %s",
+                            element
+                        )
+                    );
+                }
+                answer.add(element);
             }
         }
-        return builder.build();
+        return ImmutableSet.copyOf(answer);
     }
 }
