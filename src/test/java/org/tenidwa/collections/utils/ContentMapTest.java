@@ -1,5 +1,6 @@
 package org.tenidwa.collections.utils;
 
+import com.google.common.collect.ImmutableMap;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -14,9 +15,12 @@ public final class ContentMapTest {
     @Test
     public void detectsIdenticalValues() {
         final ContentMap<Dude, String, Integer> map = new ContentMap<>(
+            ImmutableMap.of(
+                new CombinedDude("je", "ff"),
+                2
+            ),
             Dude::name
         );
-        map.put(new CombinedDude("je", "ff"), 2);
         MatcherAssert.assertThat(
             map.containsKey(new PlainDude("jeff")),
             Matchers.is(true)
@@ -27,11 +31,11 @@ public final class ContentMapTest {
         );
     }
 
-    interface Dude {
+    private interface Dude {
         String name();
     }
 
-    final static class PlainDude implements Dude {
+    private final static class PlainDude implements Dude {
         private final String name;
 
         PlainDude(final String name) {
@@ -44,7 +48,7 @@ public final class ContentMapTest {
         }
     }
 
-    final static class CombinedDude implements Dude {
+    private final static class CombinedDude implements Dude {
         private final String one;
         private final String two;
 
