@@ -25,8 +25,8 @@ package org.tenidwa.collections.utils;
 
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -51,7 +51,7 @@ public final class AugmentedMap<K, V> extends ForwardingMap<K, V> {
      */
     public AugmentedMap(
         final Map<K, V> base,
-        final Collection<K> keys,
+        final Set<? extends K> keys,
         final Function<K, V> augmentation
     ) {
         this.delegate = AugmentedMap.createDelegate(base, keys, augmentation);
@@ -68,7 +68,7 @@ public final class AugmentedMap<K, V> extends ForwardingMap<K, V> {
      */
     private static <K, V> ImmutableMap<K, V> createDelegate(
         final Map<K, V> base,
-        final Collection<K> keys,
+        final Set<? extends K> keys,
         final Function<K, V> augmentation
     ) {
         final ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
