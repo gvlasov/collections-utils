@@ -112,6 +112,7 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         );
     }
 
+    @Deprecated
     @Override
     public void putAll(Map<? extends K, ? extends V> map) {
         throw new UnsupportedOperationException(
@@ -127,6 +128,7 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         );
     }
 
+    @Deprecated
     @Override
     public Set<K> keySet() {
         throw new UnsupportedOperationException(
@@ -139,6 +141,7 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         return this.map.values();
     }
 
+    @Deprecated
     @Override
     public Set<Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException(
