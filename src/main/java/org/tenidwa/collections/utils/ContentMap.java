@@ -1,7 +1,7 @@
 package org.tenidwa.collections.utils;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -48,14 +48,27 @@ import java.util.function.Function;
  * @since 0.6.0
  */
 public final class ContentMap<K, C, V> implements Map<K, V> {
+    /**
+     * Map from content of the base map to its values.
+     */
     private final transient Map<C, V> map;
+
+    /**
+     * Function to extract content from keys.
+     */
     private final transient Function<K, C> function;
 
+    /**
+     * Ctor.
+     * @param base Base map.
+     * @param function Function to get content of a key.
+     */
     public ContentMap(
+        final Map<K, V> base,
         final Function<K, C> function
     ) {
         this.function = function;
-        this.map = new LinkedHashMap<>();
+        this.map = this.mapContentToValues(base);
     }
 
     @Override
@@ -83,26 +96,35 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         return this.map.get(this.key(o));
     }
 
+    @Deprecated
     @Override
     public V put(K k, V v) {
-        return this.map.put(this.key(k), v);
+        throw new UnsupportedOperationException(
+            "Put operation is not supported"
+        );
     }
 
+    @Deprecated
     @Override
     public V remove(Object o) {
-        return this.map.remove(this.key(o));
+        throw new UnsupportedOperationException(
+            "Remove operation is not supported"
+        );
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> map) {
-        for (Entry<? extends K, ? extends V> e : map.entrySet()) {
-            this.put(e.getKey(), e.getValue());
-        }
+        throw new UnsupportedOperationException(
+            "Put all operation is not supported"
+        );
     }
 
+    @Deprecated
     @Override
     public void clear() {
-        this.map.clear();
+        throw new UnsupportedOperationException(
+            "Clear operation is not supported"
+        );
     }
 
     @Override
@@ -127,5 +149,21 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
     @SuppressWarnings("unchecked")
     private C key(Object o) {
         return this.function.apply((K)o);
+    }
+
+    /**
+     * Maps the content of the base map to its values.
+     * @param base Base map
+     * @return Map from content of the base map to its values.
+     */
+    private Map<C, V> mapContentToValues(final Map<K, V> base) {
+        final ImmutableMap.Builder<C, V> builder = ImmutableMap.builder();
+        for (final Entry<K, V> entry : base.entrySet()) {
+            builder.put(
+                this.key(entry.getKey()),
+                entry.getValue()
+            );
+        }
+        return builder.build();
     }
 }
