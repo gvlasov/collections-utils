@@ -1,6 +1,7 @@
 package org.tenidwa.collections.utils;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,9 @@ import java.util.function.Function;
  * This map doesn't support methods {@link Map#keySet()} and
  * {@link Map#entrySet()} because it doesn't store the keys of type
  * {@code K}, it just uses those to obtain the "hidden" keys of type {@code C}.
+ * <p/>
+ * This map is immutable, mutator methods will throw
+ * {@link UnsupportedOperationException}.
  * @param <K> Key type
  * @param <C> Some content obtainable from K
  * @param <V> Value type
@@ -51,7 +55,7 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
     /**
      * Map from content of the base map to its values.
      */
-    private final transient Map<C, V> map;
+    private final transient ImmutableMap<C, V> map;
 
     /**
      * Function to extract content from keys.
@@ -59,16 +63,22 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
     private final transient Function<K, C> function;
 
     /**
+     * Original map.
+     */
+    private final transient Map<K, V> original;
+
+    /**
      * Ctor.
      * @param base Base map.
      * @param function Function to get content of a key.
      */
     public ContentMap(
-        final Map<K, V> base,
+        final ImmutableMap<K, V> base,
         final Function<K, C> function
     ) {
         this.function = function;
         this.map = this.mapContentToValues(base);
+        this.original = base;
     }
 
     @Override
@@ -128,12 +138,9 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         );
     }
 
-    @Deprecated
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException(
-            "keySet() operation is not supported by ContentMap"
-        );
+        return ImmutableSet.copyOf(this.original.keySet());
     }
 
     @Override
@@ -141,12 +148,9 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
         return this.map.values();
     }
 
-    @Deprecated
     @Override
     public Set<Entry<K, V>> entrySet() {
-        throw new UnsupportedOperationException(
-            "entrySet() operation is not supported by ContentMap"
-        );
+        return ImmutableSet.copyOf(this.original.entrySet());
     }
 
     @SuppressWarnings("unchecked")
@@ -159,7 +163,9 @@ public final class ContentMap<K, C, V> implements Map<K, V> {
      * @param base Base map
      * @return Map from content of the base map to its values.
      */
-    private Map<C, V> mapContentToValues(final Map<K, V> base) {
+    private ImmutableMap<C, V> mapContentToValues(
+        final ImmutableMap<K, V> base
+    ) {
         final ImmutableMap.Builder<C, V> builder = ImmutableMap.builder();
         for (final Entry<K, V> entry : base.entrySet()) {
             builder.put(
