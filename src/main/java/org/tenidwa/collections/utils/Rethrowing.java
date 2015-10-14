@@ -1,5 +1,6 @@
 package org.tenidwa.collections.utils;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -13,13 +14,28 @@ import java.util.function.Function;
  */
 public final class Rethrowing {
     public interface RethrowingFunction<T, R> {
-        R apply(T t) throws Exception;
+        R apply(T x) throws Exception;
+    }
+
+    public interface RethrowingBiFunction<T1, T2, R> {
+        R apply(T1 a, T2 b) throws Exception;
     }
 
     public static <T, R> Function<T, R> rethrowFunction(RethrowingFunction<T, R> function) {
         return t -> {
             try {
                 return function.apply(t);
+            } catch (Exception exception) {
+                throwAsUnchecked(exception);
+                return null;
+            }
+        };
+    }
+
+    public static <T1, T2, R> BiFunction<T1, T2, R> rethrowBiFunction(RethrowingBiFunction<T1, T2, R> function) {
+        return (a, b) -> {
+            try {
+                return function.apply(a, b);
             } catch (Exception exception) {
                 throwAsUnchecked(exception);
                 return null;
