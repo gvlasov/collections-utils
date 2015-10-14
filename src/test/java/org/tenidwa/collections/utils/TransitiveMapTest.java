@@ -24,7 +24,7 @@ public final class TransitiveMapTest {
             ),
             Matchers.allOf(
                 Matchers.hasEntry("dude", "4-letter name dude"),
-                Matchers.hasEntry("mane", "3-letter name man")
+                Matchers.hasEntry("man", "3-letter name man")
             )
         );
     }
